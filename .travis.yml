@@ -25,9 +25,13 @@ matrix:
     include:
         - php: 7.1
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci"
+        - php: 7.2
+          name: Backward compatibillity check
+          env: DEPENDENCIES="roave/backward-compatibility-check" TEST_COMMAND="./vendor/bin/roave-backward-compatibility-check"
 
 before_install:
     - if [[ $COVERAGE != true ]]; then phpenv config-rm xdebug.ini || true; fi
+    - if ! [ -z "$DEPENDENCIES" ]; then composer require --no-update ${DEPENDENCIES}; fi;
 
 install:
     # To be removed when this issue will be resolved: https://github.com/composer/composer/issues/5355
